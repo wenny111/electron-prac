@@ -1,2 +1,1 @@
-# electron-prac
-electron-prac
+# electron-test
