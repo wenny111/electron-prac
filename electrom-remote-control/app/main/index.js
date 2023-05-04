@@ -7,9 +7,10 @@ const {createControlWindow} = require('./control')
 
 
 app.whenReady().then(() => {
-  // createMainWindow()
-  createControlWindow()
+  createMainWindow()
+  // createControlWindow()
   handleIPC()
+  require('./robot.js')()
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import {ipcRenderer} from'electron'
+import './peer-puppet'
 
 function App() {
   const [remoteCode, setRemoteCode] = useState('')
