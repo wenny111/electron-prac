@@ -6,6 +6,7 @@ const handleMouseEvents = (data) => {
   const {clientX, clientY, screen, video} = data
   let x = clientX * screen.width / video.width
   let y = clientY * screen.height / video.height
+
   robot.moveMouse(x, y)
   robot.mouseClick()
 }
@@ -18,17 +19,23 @@ const handleKeyEvents = (data) => {
   if(ctrl) modifiers.push('ctrl')
   if(shift) modifiers.push('shift')
   const key = vkey[keyCode].toLowerCase()
-  robot.keyTap(key, modifiers)
+  console.log('key', key)
+  if(key[0] !== '<') { //<shift>
+    robot.keyTap(key, modifiers)
+  } else {
+    robot.keyTap(key.slice(1, -1), modifiers)
+  }
 }
 
 const handleRobotEvents = () => {
   ipcMain.on('robot', (e, type, data) => {
+    // console.log('handle', type, data)
     switch(type) {
       case 'mouse':
-        handleMouseEvents(e, type, data)
+        handleMouseEvents(data)
         break
       case 'key':
-        handleKeyEvents(e, type, data)
+        handleKeyEvents(data)
         break
       default:
     }    

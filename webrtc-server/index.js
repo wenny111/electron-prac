@@ -17,10 +17,6 @@ wss.on('connection', function connection(ws, request) {
   // 生成随机的 6 位数作为 code
   let code =  Math.floor(Math.random()*(999999-100000)) + 100000;
   
-  // // 获取客户端的 IP 地址
-  // let ip = request.connection.remoteAddress.replace('::ffff:', '');
-  // console.log(`ip is connected ${ip} `)
-  
   // 将 code 和对应的 WebSocket 存储到 Map 中
   code2ws.set(code, ws)
   
