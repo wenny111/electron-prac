@@ -18,7 +18,7 @@ function createMainWindow () {
     mainWindow.loadURL('http://localhost:3000')
   } else {
       // 第三章用到
-    mainWindow.loadFile(path.resolve(__dirname, '../../renderer/pages/main/index.html'))
+    mainWindow.loadFile(path.resolve(__dirname, '../render/pages/control/index.html'))
   }
 }
 

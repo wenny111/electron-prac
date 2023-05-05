@@ -1,8 +1,9 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { BrowserWindow } = require('electron')
 const path = require('path')
 
+let win
 function createControlWindow () {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1000,  
     height: 800,
     webPreferences: {
@@ -14,4 +15,8 @@ function createControlWindow () {
   win.loadFile(path.resolve(__dirname, '../render/pages/control/index.html'))
 }
 
-module.exports = {createControlWindow}
+function sendControlWindow(channel, ...args) {
+  win.webContents.send(channel, ...args)
+}
+
+module.exports = {createControlWindow, sendControlWindow}

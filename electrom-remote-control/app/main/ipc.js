@@ -1,7 +1,7 @@
 // 主进程 Ipc 通信
 const { ipcMain, desktopCapturer } = require('electron');
-const {send: sendMainWindow, send: sendControlWindow} = require('./main')
-const {createControlWindow} = require('./control')
+const {send: sendMainWindow } = require('./main')
+const {createControlWindow,  sendControlWindow} = require('./control')
 const signal = require('./signal')
 
 

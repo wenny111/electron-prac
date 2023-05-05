@@ -1,7 +1,5 @@
 // 服务端：建立端和控制码的联系，通过控制码找到用户
-// import { Server } from 'ws';
 const WebSocket = require('ws');
-// const wss = new Server({ port: 8010 });
 const wss = new WebSocket.Server({ port: 8080 });
 
 // 创建一个 Map，用于存储连接的 WebSocket 和随机生成的 code 值
@@ -63,6 +61,7 @@ wss.on('connection', function connection(ws, request) {
         break
       // 处理转发事件，将事件和数据转发给远程 WebSocket
       case 'forward':
+        console.log('forward', data)
         ws.sendRemote(data.event, data.data)
         break
       // 其他事件则发送错误信息

@@ -36,14 +36,14 @@ dc.onerror = (e) => {console.log(e)}
 
 // 获取 iceEvent 和 addIceCandidate
 pc.onicecandidate = (e) => {
-    console.log('candidate', JSON.stringify(e.candidate))
-    if(e.candidate) {
-        ipcRenderer.send('forward', 'control-candidate', e.candidate)
+    console.log('candidate')
+    if(e.candidate){
+        ipcRenderer.send('forward', 'control-candidate', JSON.stringify(e.candidate))
     }
 }
 
 ipcRenderer.on('candidate', (e, candidate) => {
-    addIceCandidate(candidate)
+    addIceCandidate(JSON.parse(candidate))
 })
 
 let candidateQueue = []
@@ -53,7 +53,7 @@ async function addIceCandidate(candidate) {
         for (let candidate of candidateQueue) {
             try {
                 const rtcIceCandidate = new RTCIceCandidate(candidate);
-                await peerConnection.addIceCandidate(rtcIceCandidate);
+                await pc.addIceCandidate(rtcIceCandidate);
                 candidateQueue.shift();
             } catch (e) {
                 console.error(e)
@@ -61,7 +61,7 @@ async function addIceCandidate(candidate) {
         }
     } 
 }
-window.addIceCandidate = addIceCandidate
+// window.addIceCandidate = addIceCandidate
 
 
 const createOffer = async() => {
@@ -70,7 +70,7 @@ const createOffer = async() => {
         offerToReceiveVideo: true
     })
     await pc.setLocalDescription(offer)
-    console.log('create-offer\n', JSON.stringify(pc.localDescription))
+    console.log('create-offer\n')
     return pc.localDescription
 }
 
@@ -80,16 +80,18 @@ createOffer().then((offer) => {
 
 const setRemote = async(answer) => {
     await pc.setRemoteDescription(answer)
-    console.log('create-answer', pc)
+    console.log('set-remote')
 }
 window.setRemote = setRemote
 
 ipcRenderer.on('answer', (e, answer) => {
+    console.log('answer')
     setRemote(answer)
 })
 
 
 pc.onaddstream = (e) => {
+    console.log('add-stream', e)
 	peer.emit('add-stream', e.stream)
 }
 

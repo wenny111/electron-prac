@@ -7,9 +7,10 @@ const pc = new window.RTCPeerConnection({}) // 建立 p2p 连接
 
 // 捕获画面
 async function getScreenStream() {
+  console.log('start capture stream')
   const sources = await ipcRenderer.invoke('getScreenSources');
   return new Promise((resolve, reject) => {
-    navigator.mediaDevices.getUserMedia({
+    navigator.webkitGetUserMedia({
         audio: false,
         video: {
             mandatory: {
@@ -21,8 +22,8 @@ async function getScreenStream() {
         }
     }, (stream) => {
         console.log('add-stream')
-        resolve(stream)
         peer.emit('add-stream', stream)
+        resolve(stream)
     }, (err) => {
         console.log(err)
         reject(err)
@@ -32,7 +33,7 @@ async function getScreenStream() {
 
 
 pc.ondatachannel = (e) => {
-  console.log('data', e)
+  console.log('datachannel')
   e.channel.onmessage = (e)  => {
   console.log('onmessage', e, JSON.parse(e.data))
       let {type, data} = JSON.parse(e.data)
@@ -48,12 +49,13 @@ pc.ondatachannel = (e) => {
 }
 
 async function createAnswer(offer) {
+  console.log('create answer')
   let stream = await getScreenStream()
 
   pc.addStream(stream)
   await pc.setRemoteDescription(offer);
   await pc.setLocalDescription(await pc.createAnswer());
-  console.log('create answer \n', JSON.stringify(pc.localDescription))
+  console.log('create answer \n')
   return pc.localDescription
 }
 
@@ -63,13 +65,13 @@ window.createAnswer = createAnswer
 // })
 
 
-// 获取 iceEvent 和 addIceCandidate
 pc.onicecandidate = function(e) {
-  console.log('candidate', JSON.stringify(e.candidate))
-  ipcRenderer.send('forward', 'puppet-candidate', e.candidate)
+  console.log('candidate')
+  if(e.candidate){
+    ipcRenderer.send('forward', 'puppet-candidate', JSON.stringify(e.candidate))
+  }
 }
 
-// 设置 addIceCandidate
 const addIceCandidate = async(candidate) => {
   // 依赖remoteDescription,等其设置成功后才会生效
   candidate && candidateQueue.push(candidate);
@@ -100,6 +102,7 @@ const addIceCandidate = async(candidate) => {
 window.addIceCandidate = addIceCandidate
 
 ipcRenderer.on('offer', async(e, offer) => {
+  console.log('offer')
   let answer = await createAnswer(offer)
   ipcRenderer.send('forward', 'answer', {type: answer.type, sdp: answer.sdp})
 })

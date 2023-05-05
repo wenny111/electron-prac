@@ -3,6 +3,7 @@
 
 ## remote-control
 基于electron 和 webrtc 的远程控制工具
+npm start 输入控制码后需要「Ctrl + R」或「Cmd + R」手动刷新一下控制端页面 才会显示视频流 
 ### 业务流程
 1. 傀儡端告知控制端本机控制码
 2. 控制端输入控制码 连接 傀儡端
@@ -224,11 +225,9 @@ WebSocket 协议通常用于实时通信、多人在线游戏、实时数据推�
   // 傀儡端
   const pc = new window.RTCPeerConnection({}) 
   pc.ondatachannel = (e) => {
-    console.log('data', e)
     e.channel.onmessage = (e)  => {
     console.log('onmessage', e, JSON.parse(e.data))
         let {type, data} = JSON.parse(e.data)
-          console.log('robot', type, data)
           if(type === 'mouse') {
               data.screen = {
                   width: window.screen.width, 
@@ -264,6 +263,7 @@ app
                 ├── peer-puppet.js 傀儡端webRtc逻辑
 
 ```
+### 踩坑记录
 
 
 ### TODO
