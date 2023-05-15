@@ -1,5 +1,27 @@
 
 ## tomato
+一款类似于番茄倒计时功能的app
+![Alt text](/images/tomato.png)
+
+### 关键点
+1. 通信：渲染进程 -> 主进程 
+    ipcRenderer.invoke(...) 发送事件
+    ipcMain.handle(...) 监听事件
+    事件有 work-notification，start-timer，stop-timer
+    
+    主进程 ->  渲染进程
+    webContents.send(...)
+    ipcRenderer.on(...)
+    事件有 update-timer，timer-done
+
+2. 主进程做的事情有  app, BroserWindow, Notification, ipcMain
+   渲染进程：渲染页面，ipc通信
+
+### TODO
+1. 添加菜单自定义时间
+2. 暂停重启的边界情况
+3. 添加白噪音
+
 
 ## remote-control
 基于electron 和 webrtc 的远程控制工具
@@ -243,14 +265,14 @@ WebSocket 协议通常用于实时通信、多人在线游戏、实时数据推�
 ### 项目架构
 ```js
 app
-├── main
-│   ├── control.js 控制端窗体
+├── main 主进程
+│   ├── control.js 输入验证码后的控制端窗体
 │   ├── index.js 主进程
 │   ├── ipc.js 通信模块
-│   ├── main.js 傀儡端窗体
+│   ├── main.js react页面 双方的初始化窗口
 │   ├── robot.js 鼠标键盘控制指令模块
-│   └── signal.js
-└── render
+│   └── signal.js websocket 转发
+└── render 渲染进程
     ├── pages
     │   └── control 构建产物页面
     │       ├── app.js 控制端JS逻辑
@@ -264,11 +286,14 @@ app
 
 ```
 ### 踩坑记录
-
+1. mac/windows/ubuntu兼容性
+2. 调试
 
 ### TODO
 1. app 特性：窗口假关闭、禁止多开
 2. 原生GUI相关: 托盘、菜单
 3. robotjs： mac 和 windows键盘输入转换，拖拽事件等
+4. 完善页面样式
+5. 使用 ES Module的写法
 
 ## 服务端 

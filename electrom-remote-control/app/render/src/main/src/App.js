@@ -38,6 +38,7 @@ function App() {
 
   return (
     <div className="App">
+      <div> 傀儡端</div>
      {
       controlText === '' ? 
       <>

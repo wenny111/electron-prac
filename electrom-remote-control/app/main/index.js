@@ -3,7 +3,7 @@ const isDev = require('electron-is-dev')
 const path = require('path')
 const handleIPC = require('./ipc')
 const {createMainWindow} = require('./main')
-const {createControlWindow} = require('./control')
+// const {createControlWindow} = require('./control')
 
 
 app.whenReady().then(() => {
@@ -13,7 +13,7 @@ app.whenReady().then(() => {
   require('./robot.js')()
 
   app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
   })
 })
 
